@@ -20,7 +20,6 @@ public class Start {
 
 	private static final Logger LOG = LoggerFactory.getLogger(Start.class);
 
-	private static boolean inputLoop = false;
 	private static GameLoad gameLoad;
 
 	public static void main(String[] args) {
@@ -51,7 +50,7 @@ public class Start {
 		if (level == ONE) {
 			return GameUtil.newGame(buf); // start new game
 		} else {
-			while (!inputLoop) {
+			while (true) {
 				LOG.info(GameUtil.getFormattedMsg(MSG_BUNDLE, START_OVER));
 				String toStartOver = buf.readLine().trim().toLowerCase();
 				if (toStartOver.equalsIgnoreCase(YES) || toStartOver.equalsIgnoreCase(Y)) {
@@ -61,7 +60,6 @@ public class Start {
 				}
 			}
 		}
-		return gameLoad;
 	}
 
 	public static GameLoad continueGame(BufferedReader buf, GameLoad gameLoad) throws IOException, GameOverException {

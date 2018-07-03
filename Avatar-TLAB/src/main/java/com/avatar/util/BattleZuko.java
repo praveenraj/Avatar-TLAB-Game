@@ -95,7 +95,7 @@ public class BattleZuko {
 		}
 
 		private void perform() {
-			if (random.nextInt() * 2 != enemyBlockAction) {
+			if (random.nextInt(2) != enemyBlockAction) {
 				enemyHealth -= healthLife;
 				LOG.info("{} {} {}", messages[0], messages[2], messages[1]);
 				checkHealth();

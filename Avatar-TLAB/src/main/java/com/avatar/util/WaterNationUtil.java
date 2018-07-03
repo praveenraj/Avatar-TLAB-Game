@@ -116,13 +116,14 @@ public class WaterNationUtil {
 		GameUtil.printLevelAndPoints(gameLoad);
 		String[] directions = { DIRECTION_LEFT, DIRECTION_RIGHT, DIRECTION_FORWARD, DIRECTION_BACKWARD };
 		Random rand = new Random();
-		while (true) {
+		boolean inputLoop = false;
+		while (!inputLoop) {
 			LOG.info(GameUtil.getFormattedMsg(ANSI_RED, MSG_BUNDLE, WATER_NATION_LEVEL2_INPUT));
-			if (buf.readLine().trim().equalsIgnoreCase(directions[rand.nextInt() * directions.length])) {
+			if (buf.readLine().trim().equalsIgnoreCase(directions[rand.nextInt(directions.length)])) {
 				LOG.info(GameUtil.getFormattedMsg(ANSI_GREEN, MSG_BUNDLE, WATER_NATION_LEVEL2_ALPHA_FOUND, ALPHA));
 				// set 25 points for find alpha
 				GameUtil.setGamePoints(gameLoad, TWENTY_FIVE, TEN);
-				break;
+				inputLoop = true;
 			} else {
 				LOG.info(GameUtil.getFormattedMsg(MSG_BUNDLE, WATER_NATION_LEVEL2_ALPHA_NOT_FOUND, ALPHA));
 			}

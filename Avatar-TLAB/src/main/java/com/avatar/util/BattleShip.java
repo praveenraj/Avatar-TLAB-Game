@@ -106,9 +106,10 @@ public class BattleShip {
 				if (shoot[0] >= ONE && shoot[0] <= FIVE) {
 					shoot[0]--;
 					inputLoop = true;
+				} else {
+					LOG.info(GameUtil.getFormattedMsg(MSG_BUNDLE, BATTLE_SHIP_INPUT_EXCEPTION));
 				}
 			}
-			LOG.info(GameUtil.getFormattedMsg(MSG_BUNDLE, BATTLE_SHIP_INPUT_EXCEPTION));
 		}
 
 		inputLoop = false;
@@ -120,9 +121,10 @@ public class BattleShip {
 				if (shoot[1] >= ONE && shoot[1] <= FIVE) {
 					shoot[1]--;
 					inputLoop = true;
+				} else {
+					LOG.info(GameUtil.getFormattedMsg(MSG_BUNDLE, BATTLE_SHIP_INPUT_EXCEPTION));
 				}
 			}
-			LOG.info(GameUtil.getFormattedMsg(MSG_BUNDLE, BATTLE_SHIP_INPUT_EXCEPTION));
 		}
 
 	}
