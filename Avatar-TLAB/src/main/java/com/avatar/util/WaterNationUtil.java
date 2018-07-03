@@ -6,6 +6,7 @@ import static com.avatar.constant.GameNationConstants.EARTH_NATION;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.Random;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,14 +21,28 @@ import com.avatar.model.GameLoad;
 public class WaterNationUtil {
 
 	private static final Logger LOG = LoggerFactory.getLogger(WaterNationUtil.class);
-	private static GameCharacter gameCharacter;
-	private static boolean inputLoop;
+
+	private WaterNationUtil() {
+		throw new IllegalArgumentException("IllegalArgumentException in WaterNationUtil");
+	}
 
 	public static GameLoad level1(GameLoad gameLoad, BufferedReader buf) throws IOException, GameOverException {
 		GameUtil.storyLogInterval(GameUtil.getFormattedMsg(ANSI_RED, MSG_BUNDLE, WATER_NATION_INIT));
 		GameUtil.storyLogInterval(GameUtil.getFormattedMsg(MSG_BUNDLE, WATER_NATION_LEVEL1_INIT));
 		GameUtil.printLevelAndPoints(gameLoad);
-		inputLoop = false;
+
+		// unlock the character
+		GameCharacter gameCharacter = level1UnlockCharacter(gameLoad, buf);
+
+		// break the iceberg
+		level1BreakIceberg(gameLoad, buf, gameCharacter);
+
+		return gameLoad;
+	}
+
+	private static GameCharacter level1UnlockCharacter(GameLoad gameLoad, BufferedReader buf)
+			throws IOException, GameOverException {
+		boolean inputLoop = false;
 		while (!inputLoop) {
 			LOG.info(GameUtil.getFormattedMsg(ANSI_RED, MSG_BUNDLE, WATER_NATION_LEVEL1_INPUT));
 			int choice = Integer.parseInt(buf.readLine().trim());
@@ -48,36 +63,35 @@ public class WaterNationUtil {
 			}
 		}
 		GameUtil.clearCounter(); // clear counter
-		gameCharacter = gameLoad.getCurrentCharacter();
+		GameCharacter gameCharacter = gameLoad.getCurrentCharacter();
 		// set 25 points for unlocking character
 		GameUtil.msgLogInterval(GameUtil.getFormattedMsg(ANSI_GREEN, MSG_BUNDLE, UNLOCAKED_THE_CHARACTER,
 				gameLoad.getCharacterByName(gameCharacter.getName())));
 		GameUtil.setGamePoints(gameLoad, TWENTY_FIVE, FIVE);
+		return gameCharacter;
+	}
 
-		// break the iceberg
-		inputLoop = false;
-		switch (gameCharacter.getName()) {
-		case KATARA:
+	private static void level1BreakIceberg(GameLoad gameLoad, BufferedReader buf, GameCharacter gameCharacter)
+			throws IOException, GameOverException {
+		boolean inputLoop = false;
+		if (gameCharacter.getName().equalsIgnoreCase(KATARA)) {
 			while (!inputLoop) {
 				LOG.info(GameUtil.getFormattedMsg(ANSI_RED, MSG_BUNDLE, WATER_NATION_LEVEL1_BREAK, BREAK, WATER));
 				if (buf.readLine().trim().toLowerCase().equalsIgnoreCase(BREAK))
-					break;
+					inputLoop = true;
 				else
 					GameUtil.incrementCounter(); // increment counter
 			}
-			GameUtil.clearCounter(); // clear counter
-			break;
-		case SOKKA:
+		} else if (gameCharacter.getName().equalsIgnoreCase(SOKKA)) {
 			while (!inputLoop) {
 				LOG.info(GameUtil.getFormattedMsg(ANSI_RED, MSG_BUNDLE, WATER_NATION_LEVEL1_BREAK, SWING, BOOMARANG));
 				if (buf.readLine().trim().toLowerCase().equalsIgnoreCase(SWING))
-					break;
+					inputLoop = true;
 				else
 					GameUtil.incrementCounter(); // increment counter
 			}
-			GameUtil.clearCounter(); // clear counter
-			break;
 		}
+		GameUtil.clearCounter(); // clear counter
 
 		// set 25 points for breaking iceberg
 		GameUtil.setGamePoints(gameLoad, TWENTY_FIVE, TEN);
@@ -95,17 +109,16 @@ public class WaterNationUtil {
 
 		// level completed
 		GameUtil.levelCompleted(gameLoad, TWENTY_FIVE, buf);
-		return gameLoad;
 	}
 
-	public static GameLoad level2(GameLoad gameLoad, BufferedReader buf) throws IOException {
+	public static GameLoad level2(GameLoad gameLoad, BufferedReader buf) throws IOException, GameOverException {
 		GameUtil.storyLogInterval(GameUtil.getFormattedMsg(MSG_BUNDLE, WATER_NATION_LEVEL2_INIT, ALPHA));
 		GameUtil.printLevelAndPoints(gameLoad);
 		String[] directions = { DIRECTION_LEFT, DIRECTION_RIGHT, DIRECTION_FORWARD, DIRECTION_BACKWARD };
-		inputLoop = false;
-		while (!inputLoop) {
+		Random rand = new Random();
+		while (true) {
 			LOG.info(GameUtil.getFormattedMsg(ANSI_RED, MSG_BUNDLE, WATER_NATION_LEVEL2_INPUT));
-			if (buf.readLine().trim().equalsIgnoreCase(directions[(int) (Math.random() * directions.length)])) {
+			if (buf.readLine().trim().equalsIgnoreCase(directions[rand.nextInt() * directions.length])) {
 				LOG.info(GameUtil.getFormattedMsg(ANSI_GREEN, MSG_BUNDLE, WATER_NATION_LEVEL2_ALPHA_FOUND, ALPHA));
 				// set 25 points for find alpha
 				GameUtil.setGamePoints(gameLoad, TWENTY_FIVE, TEN);
@@ -120,7 +133,7 @@ public class WaterNationUtil {
 		return gameLoad;
 	}
 
-	public static GameLoad level3(GameLoad gameLoad, BufferedReader buf) throws IOException {
+	public static GameLoad level3(GameLoad gameLoad, BufferedReader buf) throws IOException, GameOverException {
 		GameUtil.storyLogInterval(GameUtil.getFormattedMsg(MSG_BUNDLE, WATER_NATION_LEVEL3_STORY));
 		GameUtil.storyLogInterval(GameUtil.getFormattedMsg(MSG_BUNDLE, WATER_NATION_LEVEL3_INIT));
 		GameUtil.printLevelAndPoints(gameLoad);

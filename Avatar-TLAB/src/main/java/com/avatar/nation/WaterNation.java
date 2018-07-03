@@ -14,8 +14,7 @@ import com.avatar.util.WaterNationUtil;
 public class WaterNation implements Nation {
 
 	@Override
-	public GameLoad explore(int level, GameLoad gameLoad, BufferedReader buf)
-			throws NumberFormatException, IOException, GameOverException {
+	public GameLoad explore(int level, GameLoad gameLoad, BufferedReader buf) throws IOException, GameOverException {
 
 		switch (level) {
 		case 1:

@@ -34,12 +34,12 @@ public class GameUtil {
 	private static final Logger LOG = LoggerFactory.getLogger(GameUtil.class);
 	private static GameStats gameStats;
 	private static GameLoad gameLoad;
-	private static GameCharacter currentGameCharacter;
 	private static int COUNTER = 0;
 	private static Properties prop = new Properties();
-	private static InputStream input = null;
-	private static OutputStream output = null;
-	private static boolean inputLoop;
+
+	private GameUtil() {
+		throw new IllegalArgumentException("IllegalArgumentException in GameUtil");
+	}
 
 	public static String getFormattedMsg(ResourceBundle bundle, String msg, Object... args) {
 		return MessageFormat.format(bundle.getString(msg), args);
@@ -50,10 +50,10 @@ public class GameUtil {
 	}
 
 	public static void printLevelAndPoints(GameLoad gameLoad) {
-		LOG.debug(ANSI_BLUE + gameLoad + ANSI_RESET);
+		LOG.debug("{}{}{}", ANSI_BLUE, gameLoad, ANSI_RESET);
 	}
 
-	public static void setGamePoints(GameLoad gameLoad, int points, int xp) {
+	public static void setGamePoints(GameLoad gameLoad, int points, int xp) throws GameOverException {
 		gameLoad.getGameStats().setPoints(gameLoad.getGameStats().getPoints() + points);
 		gameLoad.getGameStats().setXp(gameLoad.getGameStats().getXp() + xp);
 		msgLogInterval(getFormattedMsg(ANSI_BLUE, MSG_BUNDLE, AWARDED_POINTS, points));
@@ -71,7 +71,8 @@ public class GameUtil {
 		}
 	}
 
-	public static void levelCompleted(GameLoad gameLoad, Integer points, BufferedReader buf) throws IOException {
+	public static void levelCompleted(GameLoad gameLoad, Integer points, BufferedReader buf)
+			throws IOException, GameOverException {
 		gameLoad.getGameStats().setPoints(gameLoad.getGameStats().getPoints() + points);
 		msgLogInterval(getFormattedMsg(ANSI_BLUE, MSG_BUNDLE, AWARDED_POINTS_LEVEL, points));
 		msgLogInterval(getFormattedMsg(ANSI_GREEN, MSG_BUNDLE, LEVEL_FINISHED, gameLoad.getGameStats().getLevel(),
@@ -79,15 +80,15 @@ public class GameUtil {
 		gameLoad.getGameStats().setLevel(gameLoad.getGameStats().getLevel() + LEVEL_UP);
 
 		// wants to save game
-		inputLoop = false;
+		boolean inputLoop = false;
 		while (!inputLoop) {
 			LOG.info(getFormattedMsg(MSG_BUNDLE, SAVE_GAME));
 			String toSave = buf.readLine().trim().toLowerCase();
 			if (toSave.equalsIgnoreCase(YES) || toSave.equalsIgnoreCase(Y)) {
 				saveGame(gameLoad); // save the game
-				break;
+				inputLoop = true;
 			} else if (toSave.equalsIgnoreCase(NO) || toSave.equalsIgnoreCase(N)) {
-				break;
+				inputLoop = true;
 			}
 		}
 	}
@@ -116,7 +117,7 @@ public class GameUtil {
 	}
 
 	public static List<GameCharacter> getListOfCharacter(String names) throws GameOverException {
-		List<GameCharacter> characters = new ArrayList<GameCharacter>();
+		List<GameCharacter> characters = new ArrayList<>();
 		String[] charcatersArray = names.split(COMMA);
 		for (String characterName : charcatersArray) {
 			switch (characterName) {
@@ -148,7 +149,7 @@ public class GameUtil {
 	}
 
 	public static void saveGame(GameLoad gameLoad) throws IOException {
-		output = new FileOutputStream(RESOURCE_FOLDER + CONFIG_PROPS);
+		OutputStream output = new FileOutputStream(RESOURCE_FOLDER + CONFIG_PROPS);
 		// set the properties value
 		prop.setProperty(LEVEL, String.valueOf(gameLoad.getGameStats().getLevel()));
 		prop.setProperty(POINTS, String.valueOf(gameLoad.getGameStats().getPoints()));
@@ -176,7 +177,7 @@ public class GameUtil {
 		gameStats = new GameStats(Integer.parseInt(prop.getProperty(POINTS)), level,
 				Integer.parseInt(prop.getProperty(XP)));
 		List<GameCharacter> characters = getListOfCharacter(prop.getProperty(CHARACTERS));
-		currentGameCharacter = getGameCharacter(prop.getProperty(CURRENT_CHARACTER));
+		GameCharacter currentGameCharacter = getGameCharacter(prop.getProperty(CURRENT_CHARACTER));
 		String currentNation = null;
 		if (level >= ONE && level <= THREE) {
 			currentNation = WATER_NATION;
@@ -196,7 +197,7 @@ public class GameUtil {
 	}
 
 	public static Properties loadConfigFile() throws IOException {
-		input = new FileInputStream(RESOURCE_FOLDER + CONFIG_PROPS);
+		InputStream input = new FileInputStream(RESOURCE_FOLDER + CONFIG_PROPS);
 		// load a properties file
 		prop.load(input);
 		input.close();
@@ -208,8 +209,7 @@ public class GameUtil {
 		System.exit(0);
 	}
 
-	public static GameLoad exploreNation(GameLoad gameLoad, BufferedReader buf)
-			throws NumberFormatException, IOException, GameOverException {
+	public static GameLoad exploreNation(GameLoad gameLoad, BufferedReader buf) throws IOException, GameOverException {
 		return Nations.getNation(gameLoad.getCurrentNation()).explore(gameLoad.getGameStats().getLevel(), gameLoad,
 				buf);
 	}
@@ -219,10 +219,8 @@ public class GameUtil {
 			LOG.info(msg);
 			Thread.sleep(STORY_TIMER);
 		} catch (InterruptedException e) {
-			StringBuilder sb = new StringBuilder();
-			sb.append(GameUtil.getFormattedMsg(MSG_BUNDLE, GAME_CRASHED)).append(EMPTY).append(e.getMessage());
-			LOG.error(sb.toString());
-			System.exit(0);
+			// Restore interrupted state...
+			Thread.currentThread().interrupt();
 		}
 	}
 
@@ -231,10 +229,8 @@ public class GameUtil {
 			LOG.info(msg);
 			Thread.sleep(MSG_TIMER);
 		} catch (InterruptedException e) {
-			StringBuilder sb = new StringBuilder();
-			sb.append(GameUtil.getFormattedMsg(MSG_BUNDLE, GAME_CRASHED)).append(EMPTY).append(e.getMessage());
-			LOG.error(sb.toString());
-			System.exit(0);
+			// Restore interrupted state...
+			Thread.currentThread().interrupt();
 		}
 	}
 

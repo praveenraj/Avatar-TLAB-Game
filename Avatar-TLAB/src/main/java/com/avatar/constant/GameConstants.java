@@ -75,7 +75,7 @@ public final class GameConstants {
 	public static final Integer SEVENTY_FIVE = 75;
 
 	public static final Integer HUNDRED = 100;
-	
+
 	public static final Integer ONE_FIFTY = 150;
 
 	public static final Integer LEVEL_UP = 1;
@@ -125,4 +125,8 @@ public final class GameConstants {
 	public static final Integer STORY_TIMER = 2500;
 
 	public static final Integer MSG_TIMER = 1000;
+
+	private GameConstants() {
+		throw new IllegalArgumentException("IllegalArgumentException in GameConstants");
+	}
 }

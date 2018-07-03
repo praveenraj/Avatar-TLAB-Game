@@ -19,9 +19,8 @@ import com.avatar.util.GameUtil;
 public class Start {
 
 	private static final Logger LOG = LoggerFactory.getLogger(Start.class);
-	private static int level;
+
 	private static boolean inputLoop = false;
-	private static Properties prop;
 	private static GameLoad gameLoad;
 
 	public static void main(String[] args) {
@@ -41,6 +40,8 @@ public class Start {
 	}
 
 	public static GameLoad initPlay(BufferedReader buf) throws IOException, GameOverException {
+		int level;
+		Properties prop;
 		prop = GameUtil.loadConfigFile();
 		if (prop.containsKey(LEVEL))
 			level = Integer.parseInt(prop.getProperty(LEVEL));
@@ -63,10 +64,8 @@ public class Start {
 		return gameLoad;
 	}
 
-	public static GameLoad continueGame(BufferedReader buf, GameLoad gameLoad)
-			throws IOException, NumberFormatException, GameOverException {
-		inputLoop = false;
-		while (!inputLoop) {
+	public static GameLoad continueGame(BufferedReader buf, GameLoad gameLoad) throws IOException, GameOverException {
+		while (true) {
 			LOG.info(GameUtil.getFormattedMsg(MSG_BUNDLE, CONTINUE_GAME));
 			String toContinue = buf.readLine().trim().toLowerCase();
 			if (toContinue.equalsIgnoreCase(YES) || toContinue.equalsIgnoreCase(Y)) {
@@ -76,6 +75,5 @@ public class Start {
 				GameUtil.exitGame();
 			}
 		}
-		return gameLoad;
 	}
 }

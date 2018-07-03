@@ -14,13 +14,17 @@ import org.slf4j.LoggerFactory;
 public class BattleShip {
 
 	private static final Logger LOG = LoggerFactory.getLogger(BattleShip.class);
-	private static final boolean inputLoop = false;
 
-	public static int initBattle(BufferedReader buf) throws NumberFormatException, IOException {
+	private BattleShip() {
+		throw new IllegalArgumentException("IllegalArgumentException in BattleShip");
+	}
+
+	public static int initBattle(BufferedReader buf) throws IOException {
 		int[][] board = new int[5][5];
 		int[][] ships = new int[3][2];
 		int[] shoot = new int[2];
-		int attempts = 0, shotHit = 0;
+		int attempts = 0;
+		int shotHit = 0;
 
 		// init battle area and ship positions
 		initBoard(board);
@@ -37,8 +41,9 @@ public class BattleShip {
 				if (shotHit != THREE)
 					hint(shoot, ships, attempts);
 				LOG.info(GameUtil.getFormattedMsg(ANSI_BLUE, MSG_BUNDLE, BATTLE_SHIP_HIT, shoot[0] + 1, shoot[1] + 1));
-			} else
+			} else {
 				hint(shoot, ships, attempts);
+			}
 
 			changeboard(shoot, ships, board); // change board after shot
 
@@ -91,7 +96,8 @@ public class BattleShip {
 		}
 	}
 
-	public static void shoot(int[] shoot, BufferedReader buf) throws NumberFormatException, IOException {
+	public static void shoot(int[] shoot, BufferedReader buf) throws IOException {
+		boolean inputLoop = false;
 		while (!inputLoop) {
 			System.out.print(GameUtil.getFormattedMsg(ANSI_RED, MSG_BUNDLE, BATTLE_SHIP_ROW));
 			String rowInput = buf.readLine().trim();
@@ -99,12 +105,13 @@ public class BattleShip {
 				shoot[0] = Integer.parseInt(rowInput);
 				if (shoot[0] >= ONE && shoot[0] <= FIVE) {
 					shoot[0]--;
-					break;
+					inputLoop = true;
 				}
 			}
-			System.out.println(GameUtil.getFormattedMsg(MSG_BUNDLE, BATTLE_SHIP_INPUT_EXCEPTION));
+			LOG.info(GameUtil.getFormattedMsg(MSG_BUNDLE, BATTLE_SHIP_INPUT_EXCEPTION));
 		}
 
+		inputLoop = false;
 		while (!inputLoop) {
 			System.out.print(GameUtil.getFormattedMsg(ANSI_RED, MSG_BUNDLE, BATTLE_SHIP_COLUMN));
 			String colInput = buf.readLine().trim();
@@ -112,10 +119,10 @@ public class BattleShip {
 				shoot[1] = Integer.parseInt(colInput);
 				if (shoot[1] >= ONE && shoot[1] <= FIVE) {
 					shoot[1]--;
-					break;
+					inputLoop = true;
 				}
 			}
-			System.out.println(GameUtil.getFormattedMsg(MSG_BUNDLE, BATTLE_SHIP_INPUT_EXCEPTION));
+			LOG.info(GameUtil.getFormattedMsg(MSG_BUNDLE, BATTLE_SHIP_INPUT_EXCEPTION));
 		}
 
 	}
@@ -130,7 +137,8 @@ public class BattleShip {
 	}
 
 	public static void hint(int[] shoot, int[][] ships, int attempt) {
-		int row = 0, column = 0;
+		int row = 0;
+		int column = 0;
 
 		for (int line = 0; line < ships.length; line++) {
 			if (ships[line][0] == shoot[0])

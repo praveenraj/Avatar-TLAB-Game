@@ -8,6 +8,5 @@ import com.avatar.model.GameLoad;
 
 public interface Nation {
 
-	public GameLoad explore(int level, GameLoad gameload, BufferedReader buf)
-			throws NumberFormatException, IOException, GameOverException;
+	public GameLoad explore(int level, GameLoad gameload, BufferedReader buf) throws IOException, GameOverException;
 }

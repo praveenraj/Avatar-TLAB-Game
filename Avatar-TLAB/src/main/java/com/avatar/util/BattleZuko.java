@@ -6,6 +6,7 @@ import static com.avatar.constant.GameMessageConstants.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.Random;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,6 +42,8 @@ public class BattleZuko {
 			case ACTION_E:
 				Action.actionForCode(ACTION_E).perform();
 				break;
+			default:
+				break;
 			}
 		}
 		return winner;
@@ -74,6 +77,7 @@ public class BattleZuko {
 		private final int enemyBlockAction;
 		private final int healthLife;
 		private final String[] messages;
+		private Random random = new Random();
 
 		Action(String code, int enemyBlockAction, int healthLife, String... messages) {
 			this.code = code;
@@ -91,13 +95,13 @@ public class BattleZuko {
 		}
 
 		private void perform() {
-			if ((int) (Math.random() * 2) != enemyBlockAction) {
+			if (random.nextInt() * 2 != enemyBlockAction) {
 				enemyHealth -= healthLife;
-				LOG.info(messages[0] + messages[2] + messages[1]);
+				LOG.info("{} {} {}", messages[0], messages[2], messages[1]);
 				checkHealth();
 			} else {
 				playerHealth -= healthLife;
-				LOG.info(messages[1] + messages[3] + messages[0]);
+				LOG.info("{} {} {}", messages[1], messages[3], messages[0]);
 				checkHealth();
 			}
 		}

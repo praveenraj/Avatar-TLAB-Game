@@ -50,7 +50,7 @@ public class GameLoad {
 	}
 
 	public List<GameCharacter> getCharacters() {
-		return characters != null ? characters : new ArrayList<GameCharacter>();
+		return characters != null ? characters : new ArrayList<>();
 	}
 
 	public void setCharacters(List<GameCharacter> characters) {
@@ -97,8 +97,6 @@ public class GameLoad {
 
 	@Override
 	public String toString() {
-		// return "\"" + gameStats + " and " + characters.size() + " characters\"";
-		// return "" + gameStats;
 		return "You are in " + currentNation.toLowerCase() + " " + gameStats;
 	}
 

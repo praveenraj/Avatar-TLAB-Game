@@ -92,4 +92,7 @@ public final class GameMessageConstants {
 
 	public static final String GAME_UPDATE = "game.update";
 
+	private GameMessageConstants() {
+		throw new IllegalArgumentException("IllegalArgumentException in GameMessageConstants");
+	}
 }
