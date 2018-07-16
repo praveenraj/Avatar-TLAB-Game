@@ -1,4 +1,4 @@
-package com.avatar.util;
+package com.avatar.battles;
 
 import static com.avatar.constant.GameCombatConstants.*;
 import static com.avatar.constant.GameConstants.*;
@@ -11,6 +11,8 @@ import java.util.Random;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.avatar.util.GameUtil;
+
 public class BattleZuko {
 
 	private static final Logger LOG = LoggerFactory.getLogger(BattleZuko.class);
@@ -19,7 +21,7 @@ public class BattleZuko {
 	private static int playerHealth = 100;
 	private static String winner;
 
-	public static String initBattle(BufferedReader buf) throws IOException {
+	public String initBattle(BufferedReader buf) throws IOException {
 		playing = true;
 		while (playing) {
 			LOG.info(GameUtil.getFormattedMsg(ANSI_BLUE, MSG_BUNDLE, BATTLE_ZUKO_ENEMY_HEALTH, enemyHealth));

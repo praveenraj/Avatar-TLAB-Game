@@ -18,6 +18,7 @@ import java.util.ResourceBundle;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationContext;
 
 import com.avatar.character.Aang;
 import com.avatar.character.GameCharacter;
@@ -137,7 +138,8 @@ public class GameUtil {
 		return characters;
 	}
 
-	public static GameLoad newGame(BufferedReader buf) throws IOException, GameOverException {
+	public static GameLoad newGame(BufferedReader buf, ApplicationContext context)
+			throws IOException, GameOverException {
 		storyLogInterval(getFormattedMsg(MSG_BUNDLE, WELCOME_TO_THE_GAME));
 		storyLogInterval(getFormattedMsg(MSG_BUNDLE, ORIGIN_STORY));
 		storyLogInterval(getFormattedMsg(ANSI_GREEN, MSG_BUNDLE, GAME_BEGINS));
@@ -145,7 +147,7 @@ public class GameUtil {
 		gameStats = new GameStats();
 		gameLoad = new GameLoad(gameStats, new ArrayList<GameCharacter>(), GameNationConstants.WATER_NATION);
 		// explore the nation from new point
-		return Nations.getNation(GameNationConstants.WATER_NATION).explore(1, gameLoad, buf);
+		return Nations.getNation(GameNationConstants.WATER_NATION).explore(1, gameLoad, buf, context);
 	}
 
 	public static void saveGame(GameLoad gameLoad) throws IOException {
@@ -169,7 +171,7 @@ public class GameUtil {
 		output.close();
 	}
 
-	public static GameLoad resumeGame(BufferedReader buf, Properties prop, Integer level)
+	public static GameLoad resumeGame(BufferedReader buf, Properties prop, Integer level, ApplicationContext context)
 			throws GameOverException, IOException {
 		if (level == null) {
 			level = Integer.parseInt(prop.getProperty(LEVEL));
@@ -188,12 +190,13 @@ public class GameUtil {
 		}
 		gameLoad = new GameLoad(gameStats, characters, currentGameCharacter, currentNation);
 		// explore the nation from resume point
-		return Nations.getNation(currentNation).explore(level, gameLoad, buf);
+		return Nations.getNation(currentNation).explore(level, gameLoad, buf, context);
 	}
 
-	public static GameLoad previousLevel(GameLoad gameLoad, BufferedReader buf) throws IOException, GameOverException {
+	public static GameLoad previousLevel(GameLoad gameLoad, BufferedReader buf, ApplicationContext context)
+			throws IOException, GameOverException {
 		prop = loadConfigFile();
-		return resumeGame(buf, prop, gameLoad.getGameStats().getLevel() - ONE);
+		return resumeGame(buf, prop, gameLoad.getGameStats().getLevel() - ONE, context);
 	}
 
 	public static Properties loadConfigFile() throws IOException {
@@ -209,9 +212,10 @@ public class GameUtil {
 		System.exit(0);
 	}
 
-	public static GameLoad exploreNation(GameLoad gameLoad, BufferedReader buf) throws IOException, GameOverException {
-		return Nations.getNation(gameLoad.getCurrentNation()).explore(gameLoad.getGameStats().getLevel(), gameLoad,
-				buf);
+	public static GameLoad exploreNation(GameLoad gameLoad, BufferedReader buf, ApplicationContext context)
+			throws IOException, GameOverException {
+		return Nations.getNation(gameLoad.getCurrentNation()).explore(gameLoad.getGameStats().getLevel(), gameLoad, buf,
+				context);
 	}
 
 	public static void storyLogInterval(String msg) {

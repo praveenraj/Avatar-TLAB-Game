@@ -11,21 +11,22 @@ import java.util.Properties;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.powermock.api.mockito.PowerMockito;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.avatar.impl.Start;
 import com.avatar.model.GameLoad;
 
-@RunWith(PowerMockRunner.class)
 public class WaterNationTest {
 
 	private BufferedReader buf;
+	private ApplicationContext context;
 
 	@Before
 	public void setUp() throws Exception {
 		buf = PowerMockito.mock(BufferedReader.class);
+		context = new ClassPathXmlApplicationContext(BEANS_XML);
 	}
 
 	private void resetConfig() throws IOException {
@@ -43,7 +44,7 @@ public class WaterNationTest {
 	public void testLevel1WithKatara() throws Exception {
 		resetConfig();
 		PowerMockito.when(buf.readLine()).thenReturn("1", "break", "n");
-		GameLoad gameLoad = Start.initPlay(buf);
+		GameLoad gameLoad = Start.initPlay(buf, context);
 		Assert.assertNotNull(gameLoad);
 		Assert.assertEquals(2, gameLoad.getGameStats().getLevel());
 		Assert.assertEquals(135, gameLoad.getGameStats().getPoints());
@@ -55,7 +56,7 @@ public class WaterNationTest {
 	@Test
 	public void testLevel1WithSokka() throws Exception {
 		PowerMockito.when(buf.readLine()).thenReturn("2", "swing", "y");
-		GameLoad gameLoad = Start.initPlay(buf);
+		GameLoad gameLoad = Start.initPlay(buf, context);
 		Assert.assertNotNull(gameLoad);
 		Assert.assertEquals(2, gameLoad.getGameStats().getLevel());
 		Assert.assertEquals(135, gameLoad.getGameStats().getPoints());

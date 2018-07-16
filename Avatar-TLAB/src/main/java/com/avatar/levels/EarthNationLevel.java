@@ -1,8 +1,8 @@
-package com.avatar.util;
+package com.avatar.levels;
 
 import static com.avatar.constant.GameConstants.*;
 import static com.avatar.constant.GameMessageConstants.*;
-import static com.avatar.constant.GameNationConstants.FIRE_NATION;
+import static com.avatar.constant.GameNationConstants.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -10,34 +10,39 @@ import java.util.Properties;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 
+import com.avatar.battles.BattleZuko;
 import com.avatar.exception.GameOverException;
 import com.avatar.model.GameLoad;
+import com.avatar.util.GameUtil;
 
-public class EarthNationUtil {
+public class EarthNationLevel {
 
-	private static final Logger LOG = LoggerFactory.getLogger(EarthNationUtil.class);
+	@Autowired
+	BattleZuko battleZuko;
+	private static final Logger LOG = LoggerFactory.getLogger(EarthNationLevel.class);
 
-	private EarthNationUtil() {
-		throw new IllegalArgumentException("IllegalArgumentException in EarthNationUtil");
-	}
-
-	public static GameLoad needXpToPlay(GameLoad gameLoad, BufferedReader buf) throws IOException, GameOverException {
+	public GameLoad needXpToPlay(GameLoad gameLoad, BufferedReader buf, ApplicationContext context)
+			throws IOException, GameOverException {
 		LOG.info(GameUtil.getFormattedMsg(ANSI_RED, MSG_BUNDLE, NEED_XP, HUNDRED));
 		while (true) {
 			LOG.info(GameUtil.getFormattedMsg(MSG_BUNDLE, PREVIOUS_LEVEL));
 			String toPrev = buf.readLine().trim().toLowerCase();
 			if (toPrev.equalsIgnoreCase(YES) || toPrev.equalsIgnoreCase(Y)) {
-				return GameUtil.previousLevel(gameLoad, buf);
+				return GameUtil.previousLevel(gameLoad, buf, context);
 			} else if (toPrev.equalsIgnoreCase(NO) || toPrev.equalsIgnoreCase(N)) {
 				GameUtil.exitGame();
 			}
 		}
 	}
 
-	public static GameLoad battleWithZuko(GameLoad gameLoad, BufferedReader buf) throws IOException, GameOverException {
+	public GameLoad battleWithZuko(GameLoad gameLoad, BufferedReader buf, ApplicationContext context)
+			throws IOException, GameOverException {
+
 		// init battle with zuko
-		String winner = BattleZuko.initBattle(buf);
+		String winner = battleZuko.initBattle(buf);
 		GameUtil.msgLogInterval(GameUtil.getFormattedMsg(ANSI_GREEN, MSG_BUNDLE, BATTLE_ZUKO_WINNER, winner));
 
 		if (winner.equalsIgnoreCase(TLA)) {
@@ -57,7 +62,7 @@ public class EarthNationUtil {
 				String toResume = buf.readLine().trim().toLowerCase();
 				if (toResume.equalsIgnoreCase(YES) || toResume.equalsIgnoreCase(Y)) {
 					Properties prop = GameUtil.loadConfigFile();
-					return GameUtil.resumeGame(buf, prop, null); // resume game
+					return GameUtil.resumeGame(buf, prop, null, context); // resume game
 				} else if (toResume.equalsIgnoreCase(NO) || toResume.equalsIgnoreCase(N)) {
 					GameUtil.exitGame();
 				}

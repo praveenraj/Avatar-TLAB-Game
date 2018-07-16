@@ -1,0 +1,19 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+   http://www.springframework.org/schema/beans/spring-beans.xsd
+   http://www.springframework.org/schema/context
+   http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<context:annotation-config />
+
+	<bean id="waterLevel" class="com.avatar.levels.WaterNationLevel" />
+	<bean id="earthLevel" class="com.avatar.levels.EarthNationLevel" />
+
+	<bean id="battleShip" class="com.avatar.battles.BattleShip" />
+	<bean id="battleZuko" class="com.avatar.battles.BattleZuko" />
+
+</beans>

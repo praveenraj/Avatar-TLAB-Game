@@ -1,4 +1,4 @@
-package com.avatar.util;
+package com.avatar.battles;
 
 import static com.avatar.constant.GameConstants.*;
 import static com.avatar.constant.GameCombatConstants.*;
@@ -11,15 +11,13 @@ import java.util.Random;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.avatar.util.GameUtil;
+
 public class BattleShip {
 
 	private static final Logger LOG = LoggerFactory.getLogger(BattleShip.class);
 
-	private BattleShip() {
-		throw new IllegalArgumentException("IllegalArgumentException in BattleShip");
-	}
-
-	public static int initBattle(BufferedReader buf) throws IOException {
+	public int initBattle(BufferedReader buf) throws IOException {
 		int[][] board = new int[5][5];
 		int[][] ships = new int[3][2];
 		int[] shoot = new int[2];
@@ -54,13 +52,13 @@ public class BattleShip {
 		return attempts - ONE;
 	}
 
-	public static void initBoard(int[][] board) {
+	private void initBoard(int[][] board) {
 		for (int row = 0; row < 5; row++)
 			for (int column = 0; column < 5; column++)
 				board[row][column] = -1;
 	}
 
-	public static void showBoard(int[][] board) {
+	private void showBoard(int[][] board) {
 		System.out.println("\t1 \t2 \t3 \t4 \t5");
 		System.out.println();
 		for (int row = 0; row < 5; row++) {
@@ -79,7 +77,7 @@ public class BattleShip {
 
 	}
 
-	public static void initShips(int[][] ships) {
+	private void initShips(int[][] ships) {
 		Random random = new Random();
 		for (int ship = 0; ship < 3; ship++) {
 			ships[ship][0] = random.nextInt(5);
@@ -96,7 +94,7 @@ public class BattleShip {
 		}
 	}
 
-	public static void shoot(int[] shoot, BufferedReader buf) throws IOException {
+	private void shoot(int[] shoot, BufferedReader buf) throws IOException {
 		boolean inputLoop = false;
 		while (!inputLoop) {
 			System.out.print(GameUtil.getFormattedMsg(ANSI_RED, MSG_BUNDLE, BATTLE_SHIP_ROW));
@@ -129,7 +127,7 @@ public class BattleShip {
 
 	}
 
-	public static boolean hit(int[] shoot, int[][] ships) {
+	private boolean hit(int[] shoot, int[][] ships) {
 		for (int ship = 0; ship < ships.length; ship++) {
 			if (shoot[0] == ships[ship][0] && shoot[1] == ships[ship][1]) {
 				return true;
@@ -138,7 +136,7 @@ public class BattleShip {
 		return false;
 	}
 
-	public static void hint(int[] shoot, int[][] ships, int attempt) {
+	private void hint(int[] shoot, int[][] ships, int attempt) {
 		int row = 0;
 		int column = 0;
 
@@ -152,7 +150,7 @@ public class BattleShip {
 				shoot[1] + 1, column));
 	}
 
-	public static void changeboard(int[] shoot, int[][] ships, int[][] board) {
+	private void changeboard(int[] shoot, int[][] ships, int[][] board) {
 		if (hit(shoot, ships))
 			board[shoot[0]][shoot[1]] = 1;
 		else

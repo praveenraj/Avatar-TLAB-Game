@@ -1,8 +1,8 @@
-package com.avatar.util;
+package com.avatar.levels;
 
 import static com.avatar.constant.GameConstants.*;
 import static com.avatar.constant.GameMessageConstants.*;
-import static com.avatar.constant.GameNationConstants.EARTH_NATION;
+import static com.avatar.constant.GameNationConstants.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -10,23 +10,25 @@ import java.util.Random;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 
+import com.avatar.battles.BattleShip;
 import com.avatar.character.Aang;
 import com.avatar.character.GameCharacter;
 import com.avatar.character.Katara;
 import com.avatar.character.Sokka;
 import com.avatar.exception.GameOverException;
 import com.avatar.model.GameLoad;
+import com.avatar.util.GameUtil;
 
-public class WaterNationUtil {
+public class WaterNationLevel {
 
-	private static final Logger LOG = LoggerFactory.getLogger(WaterNationUtil.class);
+	@Autowired
+	BattleShip battleShip;
+	private static final Logger LOG = LoggerFactory.getLogger(WaterNationLevel.class);
 
-	private WaterNationUtil() {
-		throw new IllegalArgumentException("IllegalArgumentException in WaterNationUtil");
-	}
-
-	public static GameLoad level1(GameLoad gameLoad, BufferedReader buf) throws IOException, GameOverException {
+	public GameLoad level1(GameLoad gameLoad, BufferedReader buf) throws IOException, GameOverException {
 		GameUtil.storyLogInterval(GameUtil.getFormattedMsg(ANSI_RED, MSG_BUNDLE, WATER_NATION_INIT));
 		GameUtil.storyLogInterval(GameUtil.getFormattedMsg(MSG_BUNDLE, WATER_NATION_LEVEL1_INIT));
 		GameUtil.printLevelAndPoints(gameLoad);
@@ -111,7 +113,7 @@ public class WaterNationUtil {
 		GameUtil.levelCompleted(gameLoad, TWENTY_FIVE, buf);
 	}
 
-	public static GameLoad level2(GameLoad gameLoad, BufferedReader buf) throws IOException, GameOverException {
+	public GameLoad level2(GameLoad gameLoad, BufferedReader buf) throws IOException, GameOverException {
 		GameUtil.storyLogInterval(GameUtil.getFormattedMsg(MSG_BUNDLE, WATER_NATION_LEVEL2_INIT, ALPHA));
 		GameUtil.printLevelAndPoints(gameLoad);
 		String[] directions = { DIRECTION_LEFT, DIRECTION_RIGHT, DIRECTION_FORWARD, DIRECTION_BACKWARD };
@@ -134,14 +136,16 @@ public class WaterNationUtil {
 		return gameLoad;
 	}
 
-	public static GameLoad level3(GameLoad gameLoad, BufferedReader buf) throws IOException, GameOverException {
+	public GameLoad level3(GameLoad gameLoad, BufferedReader buf, ApplicationContext context)
+			throws IOException, GameOverException {
+
 		GameUtil.storyLogInterval(GameUtil.getFormattedMsg(MSG_BUNDLE, WATER_NATION_LEVEL3_STORY));
 		GameUtil.storyLogInterval(GameUtil.getFormattedMsg(MSG_BUNDLE, WATER_NATION_LEVEL3_INIT));
 		GameUtil.printLevelAndPoints(gameLoad);
 
 		// init battle ships
 		GameUtil.msgLogInterval(GameUtil.getFormattedMsg(ANSI_RED, MSG_BUNDLE, BATTLE_SHIP_INPUT));
-		int attemts = BattleShip.initBattle(buf);
+		int attemts = battleShip.initBattle(buf);
 		if (attemts <= 5) {
 			GameUtil.setGamePoints(gameLoad, HUNDRED, SEVENTY_FIVE);
 		} else if (attemts > 5 && attemts <= 8) {
@@ -159,5 +163,4 @@ public class WaterNationUtil {
 		gameLoad.setCurrentNation(EARTH_NATION);
 		return gameLoad;
 	}
-
 }

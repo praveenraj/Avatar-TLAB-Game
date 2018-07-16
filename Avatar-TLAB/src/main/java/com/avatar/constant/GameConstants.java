@@ -12,6 +12,8 @@ public final class GameConstants {
 
 	public static final String CONFIG_PROPS = "config.properties";
 
+	public static final String BEANS_XML = "classpath:beans.xml";
+
 	public static final String AVATAR_AANG = "Avatar Aang";
 
 	public static final String TLA = "The Last Airbender";
@@ -125,6 +127,14 @@ public final class GameConstants {
 	public static final Integer STORY_TIMER = 2500;
 
 	public static final Integer MSG_TIMER = 1000;
+
+	public static final String WATER_LEVEL_BEAN = "waterLevel";
+
+	public static final String EARTH_LEVEL_BEAN = "earthLevel";
+
+	public static final String BATTLE_SHIP_BEAN = "battleShip";
+
+	public static final String BATTLE_ZUKO_BEAN = "battleZuko";
 
 	private GameConstants() {
 		throw new IllegalArgumentException("IllegalArgumentException in GameConstants");
