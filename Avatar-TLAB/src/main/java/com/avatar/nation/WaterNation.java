@@ -27,7 +27,7 @@ public class WaterNation implements Nation {
 		case 2:
 			return waterLevel.level2(gameLoad, buf);
 		case 3:
-			return waterLevel.level3(gameLoad, buf, context);
+			return waterLevel.level3(gameLoad, buf);
 		default:
 			throw new GameOverException(GameUtil.getFormattedMsg(MSG_BUNDLE, LEVEL_EXCEPTION, level, WATER));
 		}

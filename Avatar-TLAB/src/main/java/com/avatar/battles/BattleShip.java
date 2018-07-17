@@ -52,13 +52,13 @@ public class BattleShip {
 		return attempts - ONE;
 	}
 
-	private void initBoard(int[][] board) {
+	private static void initBoard(int[][] board) {
 		for (int row = 0; row < 5; row++)
 			for (int column = 0; column < 5; column++)
 				board[row][column] = -1;
 	}
 
-	private void showBoard(int[][] board) {
+	private static void showBoard(int[][] board) {
 		System.out.println("\t1 \t2 \t3 \t4 \t5");
 		System.out.println();
 		for (int row = 0; row < 5; row++) {
@@ -77,7 +77,7 @@ public class BattleShip {
 
 	}
 
-	private void initShips(int[][] ships) {
+	private static void initShips(int[][] ships) {
 		Random random = new Random();
 		for (int ship = 0; ship < 3; ship++) {
 			ships[ship][0] = random.nextInt(5);
@@ -94,7 +94,7 @@ public class BattleShip {
 		}
 	}
 
-	private void shoot(int[] shoot, BufferedReader buf) throws IOException {
+	private static void shoot(int[] shoot, BufferedReader buf) throws IOException {
 		boolean inputLoop = false;
 		while (!inputLoop) {
 			System.out.print(GameUtil.getFormattedMsg(ANSI_RED, MSG_BUNDLE, BATTLE_SHIP_ROW));
@@ -127,7 +127,7 @@ public class BattleShip {
 
 	}
 
-	private boolean hit(int[] shoot, int[][] ships) {
+	private static boolean hit(int[] shoot, int[][] ships) {
 		for (int ship = 0; ship < ships.length; ship++) {
 			if (shoot[0] == ships[ship][0] && shoot[1] == ships[ship][1]) {
 				return true;
@@ -136,7 +136,7 @@ public class BattleShip {
 		return false;
 	}
 
-	private void hint(int[] shoot, int[][] ships, int attempt) {
+	private static void hint(int[] shoot, int[][] ships, int attempt) {
 		int row = 0;
 		int column = 0;
 
@@ -150,7 +150,7 @@ public class BattleShip {
 				shoot[1] + 1, column));
 	}
 
-	private void changeboard(int[] shoot, int[][] ships, int[][] board) {
+	private static void changeboard(int[] shoot, int[][] ships, int[][] board) {
 		if (hit(shoot, ships))
 			board[shoot[0]][shoot[1]] = 1;
 		else

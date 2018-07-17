@@ -6,14 +6,6 @@ public class Aang extends GameCharacter implements Serializable {
 
 	private static final long serialVersionUID = 6475707637649790184L;
 
-	public Aang() {
-		super("Avatar Aang", "air");
-	}
-
-	public Aang(String name) {
-		super(name, "air");
-	}
-
 	public Aang(String name, String powerSrc) {
 		super(name, powerSrc);
 	}

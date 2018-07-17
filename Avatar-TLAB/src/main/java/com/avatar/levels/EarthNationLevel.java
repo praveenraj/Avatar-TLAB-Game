@@ -10,7 +10,6 @@ import java.util.Properties;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 
 import com.avatar.battles.BattleZuko;
@@ -20,9 +19,17 @@ import com.avatar.util.GameUtil;
 
 public class EarthNationLevel {
 
-	@Autowired
-	BattleZuko battleZuko;
 	private static final Logger LOG = LoggerFactory.getLogger(EarthNationLevel.class);
+
+	/*
+	 * Auto wire by constructor
+	 */
+	private BattleZuko battleZuko;
+
+	public EarthNationLevel(BattleZuko battleZuko) {
+		super();
+		this.battleZuko = battleZuko;
+	}
 
 	public GameLoad needXpToPlay(GameLoad gameLoad, BufferedReader buf, ApplicationContext context)
 			throws IOException, GameOverException {

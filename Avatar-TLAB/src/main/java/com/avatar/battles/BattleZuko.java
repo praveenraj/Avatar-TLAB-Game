@@ -17,8 +17,8 @@ public class BattleZuko {
 
 	private static final Logger LOG = LoggerFactory.getLogger(BattleZuko.class);
 	private static boolean playing = false;
-	private static int enemyHealth = 100;
-	private static int playerHealth = 100;
+	private static int enemyHealth = HUNDRED;
+	private static int playerHealth = HUNDRED;
 	private static String winner;
 
 	public String initBattle(BufferedReader buf) throws IOException {

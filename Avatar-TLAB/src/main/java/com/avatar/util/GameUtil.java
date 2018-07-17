@@ -18,6 +18,7 @@ import java.util.ResourceBundle;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 
 import com.avatar.character.Aang;
@@ -33,6 +34,17 @@ import com.avatar.nation.Nations;
 public class GameUtil {
 
 	private static final Logger LOG = LoggerFactory.getLogger(GameUtil.class);
+
+	/*
+	 * Auto wire by annotation
+	 */
+	@Autowired
+	private static Katara katara;
+	@Autowired
+	private static Sokka sokka;
+	@Autowired
+	private static Aang aang;
+
 	private static GameStats gameStats;
 	private static GameLoad gameLoad;
 	private static int COUNTER = 0;
@@ -107,11 +119,11 @@ public class GameUtil {
 	public static GameCharacter getGameCharacter(String name) throws GameOverException {
 		switch (name) {
 		case KATARA:
-			return new Katara();
+			return katara;
 		case AVATAR_AANG:
-			return new Aang();
+			return aang;
 		case SOKKA:
-			return new Sokka();
+			return sokka;
 		default:
 			throw new GameOverException(getFormattedMsg(MSG_BUNDLE, CHARACTER_EXCEPTION));
 		}
@@ -123,13 +135,13 @@ public class GameUtil {
 		for (String characterName : charcatersArray) {
 			switch (characterName) {
 			case KATARA:
-				characters.add(new Katara());
+				characters.add(katara);
 				break;
 			case AVATAR_AANG:
-				characters.add(new Aang());
+				characters.add(aang);
 				break;
 			case SOKKA:
-				characters.add(new Sokka());
+				characters.add(sokka);
 				break;
 			default:
 				throw new GameOverException(getFormattedMsg(MSG_BUNDLE, CHARACTER_EXCEPTION));

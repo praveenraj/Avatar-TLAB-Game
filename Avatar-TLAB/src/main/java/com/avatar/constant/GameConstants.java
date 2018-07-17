@@ -12,7 +12,7 @@ public final class GameConstants {
 
 	public static final String CONFIG_PROPS = "config.properties";
 
-	public static final String BEANS_XML = "classpath:beans.xml";
+	public static final String BEANS_XML = "classpath:app-context.xml";
 
 	public static final String AVATAR_AANG = "Avatar Aang";
 
@@ -124,9 +124,15 @@ public final class GameConstants {
 
 	public static final String N = "n";
 
-	public static final Integer STORY_TIMER = 2500;
+	public static final Integer STORY_TIMER = 0;
 
-	public static final Integer MSG_TIMER = 1000;
+	public static final Integer MSG_TIMER = 0;
+
+	public static final String AANG_BEAN = "aang";
+
+	public static final String KATARA_BEAN = "katara";
+
+	public static final String SOKKA_BEAN = "sokka";
 
 	public static final String WATER_LEVEL_BEAN = "waterLevel";
 

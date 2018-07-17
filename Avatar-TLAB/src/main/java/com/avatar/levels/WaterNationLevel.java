@@ -11,7 +11,6 @@ import java.util.Random;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 
 import com.avatar.battles.BattleShip;
 import com.avatar.character.Aang;
@@ -24,9 +23,32 @@ import com.avatar.util.GameUtil;
 
 public class WaterNationLevel {
 
-	@Autowired
-	BattleShip battleShip;
 	private static final Logger LOG = LoggerFactory.getLogger(WaterNationLevel.class);
+
+	/*
+	 * Auto wire by annotation
+	 */
+	@Autowired
+	private BattleShip battleShip;
+
+	/*
+	 * Auto wire by name
+	 */
+	private Aang aang;
+	private Katara katara;
+	private Sokka sokka;
+
+	public void setAang(Aang aang) {
+		this.aang = aang;
+	}
+
+	public void setKatara(Katara katara) {
+		this.katara = katara;
+	}
+
+	public void setSokka(Sokka sokka) {
+		this.sokka = sokka;
+	}
 
 	public GameLoad level1(GameLoad gameLoad, BufferedReader buf) throws IOException, GameOverException {
 		GameUtil.storyLogInterval(GameUtil.getFormattedMsg(ANSI_RED, MSG_BUNDLE, WATER_NATION_INIT));
@@ -42,20 +64,21 @@ public class WaterNationLevel {
 		return gameLoad;
 	}
 
-	private static GameCharacter level1UnlockCharacter(GameLoad gameLoad, BufferedReader buf)
+	private GameCharacter level1UnlockCharacter(GameLoad gameLoad, BufferedReader buf)
 			throws IOException, GameOverException {
+
 		boolean inputLoop = false;
 		while (!inputLoop) {
 			LOG.info(GameUtil.getFormattedMsg(ANSI_RED, MSG_BUNDLE, WATER_NATION_LEVEL1_INPUT));
 			int choice = Integer.parseInt(buf.readLine().trim());
 			switch (choice) {
 			case 1:
-				gameLoad.getCharacters().add(new Katara());
+				gameLoad.getCharacters().add(katara);
 				gameLoad.setCurrentCharacter(gameLoad.getCharacterByName(KATARA));
 				inputLoop = true;
 				break;
 			case 2:
-				gameLoad.getCharacters().add(new Sokka());
+				gameLoad.getCharacters().add(sokka);
 				gameLoad.setCurrentCharacter(gameLoad.getCharacterByName(SOKKA));
 				inputLoop = true;
 				break;
@@ -73,7 +96,7 @@ public class WaterNationLevel {
 		return gameCharacter;
 	}
 
-	private static void level1BreakIceberg(GameLoad gameLoad, BufferedReader buf, GameCharacter gameCharacter)
+	private void level1BreakIceberg(GameLoad gameLoad, BufferedReader buf, GameCharacter gameCharacter)
 			throws IOException, GameOverException {
 		boolean inputLoop = false;
 		if (gameCharacter.getName().equalsIgnoreCase(KATARA)) {
@@ -99,7 +122,7 @@ public class WaterNationLevel {
 		GameUtil.setGamePoints(gameLoad, TWENTY_FIVE, TEN);
 
 		// Avatar returns
-		gameCharacter = new Aang();
+		gameCharacter = aang;
 		GameUtil.addCharacterToGameLoad(gameLoad, gameCharacter);
 		gameLoad.setCurrentCharacter(gameCharacter);
 		// set 50 points for avatar returns
@@ -136,8 +159,7 @@ public class WaterNationLevel {
 		return gameLoad;
 	}
 
-	public GameLoad level3(GameLoad gameLoad, BufferedReader buf, ApplicationContext context)
-			throws IOException, GameOverException {
+	public GameLoad level3(GameLoad gameLoad, BufferedReader buf) throws IOException, GameOverException {
 
 		GameUtil.storyLogInterval(GameUtil.getFormattedMsg(MSG_BUNDLE, WATER_NATION_LEVEL3_STORY));
 		GameUtil.storyLogInterval(GameUtil.getFormattedMsg(MSG_BUNDLE, WATER_NATION_LEVEL3_INIT));
